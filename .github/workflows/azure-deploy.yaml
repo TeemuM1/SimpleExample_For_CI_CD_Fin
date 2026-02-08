@@ -35,9 +35,9 @@ jobs:
     - name: Run tests
       run: dotnet test --configuration Release --no-build --verbosity normal
       env:
-        LANG: en_US.UTF-8
-        LC_ALL: en_US.UTF-8
-        DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: false
+        LANG: fi-FI.UTF-8
+        LC_ALL: fi-FI.UTF-8
+        DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: 0
     
     - name: Publish
       run: dotnet publish SimpleExample.API/SimpleExample.API.csproj -c Release -o ./publish --no-build
