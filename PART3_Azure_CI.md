@@ -1,4 +1,4 @@
-# Osa 3: Domain-validointi, testit ja CI/CD-putki
+dotne# Osa 3: Domain-validointi, testit ja CI/CD-putki
 
 ## Tavoite
 
