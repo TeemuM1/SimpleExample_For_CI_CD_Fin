@@ -25,6 +25,13 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Install Finnish locale
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y locales
+        sudo locale-gen fi_FI.UTF-8
+        sudo update-locale
     
     - name: Restore dependencies
       run: dotnet restore
