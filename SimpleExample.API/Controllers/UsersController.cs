@@ -43,9 +43,13 @@ public class UsersController : ControllerBase
     /// Create a new user
     /// </summary>
     [HttpPost]
-    [HttpPost]
     public async Task<ActionResult<UserDto>> Create([FromBody] CreateUserDto createUserDto)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
         try
         {
             UserDto user = await _userService.CreateAsync(createUserDto);
@@ -54,6 +58,10 @@ public class UsersController : ControllerBase
         catch (ArgumentException ex)
         {
             return BadRequest(new { message = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new { message = ex.Message }); // 409 Conflict
         }
     }
 
