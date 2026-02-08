@@ -14,7 +14,7 @@ env:
 jobs:
   # Job 1: Build ja testit (CI)
   build-and-test:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     name: Build and Test
     
     steps:
@@ -25,13 +25,6 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
-
-    - name: Install Finnish locale
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y locales
-        sudo locale-gen fi_FI.UTF-8
-        sudo update-locale
     
     - name: Restore dependencies
       run: dotnet restore
@@ -41,10 +34,6 @@ jobs:
     
     - name: Run tests
       run: dotnet test --configuration Release --no-build --verbosity normal
-      env:
-        LANG: fi-FI.UTF-8
-        LC_ALL: fi-FI.UTF-8
-        DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: 0
     
     - name: Publish
       run: dotnet publish SimpleExample.API/SimpleExample.API.csproj -c Release -o ./publish --no-build
