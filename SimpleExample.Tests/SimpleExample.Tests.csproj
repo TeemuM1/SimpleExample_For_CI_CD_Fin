@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SimpleExample.API\SimpleExample.API.csproj" />
     <ProjectReference Include="..\SimpleExample.Domain\SimpleExample.Domain.csproj" />
     <ProjectReference Include="..\SimpleExample.Application\SimpleExample.Application.csproj" />
     <ProjectReference Include="..\SimpleExample.Infrastructure\SimpleExample.Infrastructure.csproj" />

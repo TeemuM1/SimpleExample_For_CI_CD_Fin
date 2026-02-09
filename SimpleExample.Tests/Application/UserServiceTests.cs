@@ -132,12 +132,12 @@ public class UserServiceTests
     public async Task GetAllAsync_ReturnsList()
     {
         //Arrange
-        List<User> users = new List<User>();
+        List<User> users = new List<User>
         {
             new User("Matti", "Meikäläinen", "matti@example.com"),
             new User("Maija", "Meikäläinen", "maija@example.com"),
             new User("Pekka", "Pouta", "pekka@example.com")
-        }
+        };
 
         _mockRepository
             .Setup(x => x.GetAllAsync())
@@ -201,7 +201,7 @@ public class UserServiceTests
     public async Task UpdateAsync_UserNotFound_ShouldReturnNotFound()
     {
         //Arrange
-        Guid nullId = Guid.NewGuid();
+        Guid invalidId = Guid.NewGuid();
 
         UpdateUserDto dto = new UpdateUserDto
         {
@@ -211,11 +211,11 @@ public class UserServiceTests
         };
 
         _mockRepository
-            .Setup(x => x.GetByIdAsync(nullId))
+            .Setup(x => x.GetByIdAsync(invalidId))
             .ReturnsAsync((User?)null);
 
         //Act
-        UserDto result = await _service.UpdateAsync(nullId, dto);
+        UserDto result = await _service.UpdateAsync(invalidId, dto);
 
         //Assert
         result.Should().BeNull();
@@ -229,8 +229,51 @@ public class UserServiceTests
 
     public async Task DeleteAsync_UserFound_ShouldDeleteUser()
     {
+        //Arrange
+        Guid userId = Guid.NewGuid();
+
+        User existingUser = new User("Matti", "Meikäläinen", "matti@example.com");
+
+        _mockRepository
+            .Setup(x => x.ExistsAsync(userId))
+            .ReturnsAsync(true);
+
+        _mockRepository
+            .Setup(x => x.DeleteAsync(userId))
+            .Returns(Task.CompletedTask);
+
+        //Act
+        bool result = await _service.DeleteAsync(userId);
+
+        //Assert
+        result.Should().Be(true);
+
+        _mockRepository.Verify(x => x.DeleteAsync(userId), Times.Once);
+        _mockRepository.Verify(x => x.ExistsAsync(userId), Times.Once);
 
     }
-    // TEHTÄVÄ: Kirjoita itse testit seuraaville:
+
     // 7. DeleteAsync - käyttäjää ei löydy
+    [Fact]
+
+    public async Task DeleteAsync_UserNotFound_ShouldReturnNotFound()
+    {
+
+        //Arrange
+        Guid invalidId = Guid.NewGuid();
+
+        _mockRepository
+            .Setup(x => x.ExistsAsync(invalidId))
+            .ReturnsAsync(false);
+
+        //Act
+        bool result = await _service.DeleteAsync(invalidId);
+
+        //Assert
+        result.Should().Be(false);
+
+        _mockRepository.Verify(x => x.ExistsAsync(invalidId), Times.Once);
+        _mockRepository.Verify(x => x.DeleteAsync(invalidId), Times.Never);
+
+    }
 }
